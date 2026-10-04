@@ -101,6 +101,62 @@ class Graph {
 
     }
 
+    dfsRecursive(start) {
+        let res = []
+        const traverse = (node, visited) => {
+            visited[node] = true
+            res.push(node)
+
+            let neighbors = this.adjacencyList.get(node)
+
+            for (let i = 0; i < neighbors.length; i++) {
+                if (!visited[neighbors[i]]) {
+                    traverse(neighbors[i], visited)
+                }
+            }
+        }
+
+        traverse(start, [])
+        console.log("Recursive dfs", res);
+
+
+    }
+
+
+    dfsToDetectCycle(start) {
+
+        console.log("Detect a cycle using DFS:");
+
+        let stack = [{ node: start, parent: null }]
+        let visited = new Set();
+        visited.add(start) // add the start node to visited set
+
+        while (stack.length > 0) {
+            let { node, parent } = stack.pop();
+            console.log("node:", node);
+            console.log("parent:", parent);
+            console.log("stack:", stack);
+            // if (visited.has(node)) continue
+
+
+            // if (visited.has(node) && prev === node) return true;
+
+            // prev = node;
+            let neighbors = this.adjacencyList.get(node);
+            console.log("neighbors:", neighbors);
+            for (let i = 0; i < neighbors.length; i++) {
+
+                if (!visited.has(neighbors[i])) {
+                    visited.add(neighbors[i])
+                    stack.push({ node: neighbors[i], parent: node })
+                } else if (neighbors[i] !== parent) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
 
     edgeListToAdjacencyList(edgeList) {
         let list = new Map();
@@ -137,21 +193,23 @@ class Graph {
 
 }
 const graph = new Graph()
-graph.addVertex(0)
+// graph.addVertex(0)
 graph.addVertex(1)
 graph.addVertex(2)
 graph.addVertex(3)
-graph.addVertex(4)
+// graph.addVertex(4)
 
-graph.addEdge(0, 1) // 0-1 and 1 is connect with 0
+// graph.addEdge(0, 1) // 0-1 and 1 is connect with 0
 graph.addEdge(1, 2) // 1 is connected with 2
-// graph.addEdge(1, 3) // 1 is also connect with 3
+graph.addEdge(1, 3) // 1 is also connect with 3
 graph.addEdge(2, 3) // 2 is connectd with 3
-graph.addEdge(2, 4) // 2 is connected wtih 4
+// graph.addEdge(2, 4) // 2 is connected wtih 4
 // See the snapshot of graph
 graph.printList()
-graph.bfs(0)
-graph.dfs(0)
+// graph.bfs(0)
+// graph.dfs(0)
+// graph.dfsRecursive(0)
+console.log("Detect cycle using dfs:", graph.dfsToDetectCycle(1))
 // graph.edgeListToAdjacencyList([[0, 1], [1, 2], [2, 0]])
 
 
